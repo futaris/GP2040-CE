@@ -22,5 +22,4 @@ target_link_libraries(TinyUSB_Gamepad
 pico_stdlib
 pico_mbedtls
 tinyusb_device
-rndis
 )

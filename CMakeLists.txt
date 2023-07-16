@@ -19,6 +19,8 @@ project(GP2040-CE LANGUAGES C CXX ASM VERSION 0.7.2)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
+set(PICO_BOARD pico_w)
+
 if(DEFINED ENV{GP2040_BOARDCONFIG})
   set(GP2040_BOARDCONFIG $ENV{GP2040_BOARDCONFIG})
 elseif(NOT DEFINED GP2040_BOARDCONFIG)
@@ -173,19 +175,31 @@ PlayerLEDs
 NeoPico
 OneBitDisplay
 ArduinoJson
-rndis
+picow_access_point
 hardware_adc
 WiiExtension
 SNESpad
 pico_mbedtls
 TinyUSB_Gamepad
 nanopb
+pico_btstack_ble
+pico_btstack_classic
+pico_btstack_cyw43
+pico_cyw43_arch_threadsafe_background
+pico_lwip_nosys
 )
+
+# pico_btstack_hci_transport_cyw43
+
+# pico_btstack_classic is classic HID 
+# pico_btstack_ble is HOGP
+# pico_cyw43_arch_lwip_poll
+# poll is for the lwip (poll)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
 headers
 headers/addons
-headers/configs
+headers/configs 
 headers/gamepad
 configs/${GP2040_BOARDCONFIG}
 ${PROTO_OUTPUT_DIR}
@@ -194,6 +208,8 @@ ${PROTO_OUTPUT_DIR}
 target_compile_definitions(${PROJECT_NAME} PUBLIC
   PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64
 )
+
+# CYW43_LWIP=0
 
 target_include_directories(${PROJECT_NAME}  PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}

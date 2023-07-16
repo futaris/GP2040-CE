@@ -136,7 +136,7 @@
 
 //------------- CLASS -------------//
 #define CFG_TUD_CDC              0
-#define CFG_TUD_ECM_RNDIS        1
+// #define CFG_TUD_ECM_RNDIS        1
 #define CFG_TUD_HID              2
 
 //--------------------------------------------------------------------

@@ -35,6 +35,7 @@ namespace ConfigLegacy
         INPUT_MODE_HID,
         INPUT_MODE_KEYBOARD,
         INPUT_MODE_PS4,
+        INPUT_MODE_BT,
         INPUT_MODE_CONFIG = 255,
     };
 
@@ -477,6 +478,7 @@ static bool isValidInputMode(ConfigLegacy::InputMode inputMode)
         case INPUT_MODE_HID:
         case INPUT_MODE_KEYBOARD:
         case INPUT_MODE_PS4:
+        case INPUT_MODE_BT:
             return true;
     }
     return false;

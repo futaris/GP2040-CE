@@ -51,7 +51,7 @@ void GP2040::setup() {
 	Gamepad * gamepad = Storage::getInstance().GetGamepad();
 	gamepad->setup();
 
-	const BootAction bootAction = getBootAction();
+	const BootAction bootAction = BootAction::ENTER_WEBCONFIG_MODE; // getBootAction(); // HASJIM
 	switch (bootAction) {
 		case BootAction::ENTER_WEBCONFIG_MODE:
 			{
@@ -72,6 +72,7 @@ void GP2040::setup() {
 		case BootAction::SET_INPUT_MODE_XINPUT:
 		case BootAction::SET_INPUT_MODE_PS4:
 		case BootAction::SET_INPUT_MODE_KEYBOARD:
+		case BootAction::SET_INPUT_MODE_BT:
 		case BootAction::NONE:
 			{
 				InputMode inputMode = gamepad->getOptions().inputMode;
@@ -85,6 +86,8 @@ void GP2040::setup() {
 					inputMode = INPUT_MODE_PS4;
 				} else if (bootAction == BootAction::SET_INPUT_MODE_KEYBOARD) {
 					inputMode = INPUT_MODE_KEYBOARD;
+				} else if (bootAction == BootAction::SET_INPUT_MODE_BT) {
+					inputMode = INPUT_MODE_BT;
 				}
 
 				if (inputMode != gamepad->getOptions().inputMode) {
@@ -200,6 +203,8 @@ GP2040::BootAction GP2040::getBootAction() {
 					return BootAction::SET_INPUT_MODE_HID;
 				} else if (!modeSwitchLocked && gamepad->pressedB4()) { // P2
 					return BootAction::SET_INPUT_MODE_PS4;
+				} else if (!modeSwitchLocked && gamepad->pressedL1()) { // P3
+					return BootAction::SET_INPUT_MODE_BT;
 				} else if (!modeSwitchLocked && gamepad->pressedB1()) { // K1
 					return BootAction::SET_INPUT_MODE_SWITCH;
 				} else if (!modeSwitchLocked && gamepad->pressedB2()) { // K2
@@ -207,7 +212,8 @@ GP2040::BootAction GP2040::getBootAction() {
 				} else if (!modeSwitchLocked && gamepad->pressedR2()) { // K3
 					return BootAction::SET_INPUT_MODE_KEYBOARD;
 				} else {
-					return BootAction::NONE;
+//					return BootAction::NONE; /* HASJIM SAKEBOX */
+					return BootAction::ENTER_USB_MODE;
 				}
 
 				break;

@@ -16,15 +16,20 @@
 
 // HTTPD Includes
 #include <ArduinoJson.h>
-#include "rndis.h"
-#include "fs.h"
-#include "fscustom.h"
-#include "fsdata.h"
-#include "lwip/apps/httpd.h"
-#include "lwip/def.h"
-#include "lwip/mem.h"
+// #include "rndis.h"
+
+#include "../../lib/httpd/fs.h"
+#include "../../lib/httpd/fscustom.h"
+#include "../../lib/httpd/fsdata.h"
+#include "/Users/futaris/github/raspberrypi/pico-sdk/lib/lwip/src/include/lwip/apps/httpd.h"
+#include "/Users/futaris/github/raspberrypi/pico-sdk/lib/lwip/src/include/lwip/def.h"
+#include "/Users/futaris/github/raspberrypi/pico-sdk/lib/lwip/src/include/lwip/mem.h"
 
 #include "bitmaps.h"
+
+#include "../../lib/picow_access_point/picow_access_point.h"
+// #include "picow_access_point.h"
+
 
 #define PATH_CGI_ACTION "/cgi/action"
 
@@ -144,12 +149,20 @@ static void __attribute__((noinline)) writeDoc(DynamicJsonDocument& doc, const K
 static int32_t cleanPin(int32_t pin) { return isValidPin(pin) ? pin : -1; }
 
 void WebConfig::setup() {
+#if 0
 	rndis_init();
+#else
+	picow_access_point_init();
+#endif
 }
 
 void WebConfig::loop() {
+#if 0
 	// rndis http server requires inline functions (non-class)
 	rndis_task();
+#else
+	picow_access_point_task();
+#endif
 
 	if (!is_nil_time(rebootDelayTimeout) && time_reached(rebootDelayTimeout)) {
 		System::reboot(rebootMode);
@@ -1431,6 +1444,7 @@ static const std::pair<const char*, HandlerFuncStatusCodePtr> handlerFuncsWithSt
 
 int fs_open_custom(struct fs_file *file, const char *name)
 {
+#if LWIP_HTTPD_CUSTOM_FILES
 	for (const auto& handlerFunc : handlerFuncs)
 	{
 		if (strcmp(handlerFunc.first, name) == 0)
@@ -1466,14 +1480,17 @@ int fs_open_custom(struct fs_file *file, const char *name)
 		}
 	}
 
+#endif
 	return 0;
 }
 
 void fs_close_custom(struct fs_file *file)
 {
+#if LWIP_HTTPD_CUSTOM_FILES
 	if (file && file->is_custom_file && file->pextension)
 	{
 		mem_free(file->pextension);
 		file->pextension = NULL;
 	}
+#endif
 }
