@@ -23,10 +23,14 @@
 #include "addons/i2canalog1219.h"
 #include "addons/i2cdisplay.h"
 #include "addons/jslider.h"
+#if 0 // USB
 #include "addons/neopicoleds.h"
+#endif
 #include "addons/playernum.h"
+#if 0 // USB
 #include "addons/ps4mode.h"
 #include "addons/pleds.h"
+#endif
 #include "addons/reverse.h"
 #include "addons/turbo.h"
 #include "addons/slider_socd.h"

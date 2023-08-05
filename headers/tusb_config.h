@@ -135,9 +135,12 @@
 #endif
 
 //------------- CLASS -------------//
-#define CFG_TUD_CDC              0
 #define CFG_TUD_ECM_RNDIS        1
 #define CFG_TUD_HID              2
+#define CFG_TUD_CDC              2
+
+#define CFG_TUD_CDC_RX_BUFSIZE      (TUD_OPT_HIGH_SPEED ? 512 : 64)
+#define CFG_TUD_CDC_TX_BUFSIZE      (TUD_OPT_HIGH_SPEED ? 512 : 64)
 
 //--------------------------------------------------------------------
 // HOST CONFIGURATION
