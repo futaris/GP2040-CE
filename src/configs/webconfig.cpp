@@ -17,7 +17,11 @@
 
 // HTTPD Includes
 #include <ArduinoJson.h>
+
+#if 0 // USB
 #include "rndis.h"
+#endif
+
 #include "fs.h"
 #include "fscustom.h"
 #include "fsdata.h"
@@ -978,10 +982,12 @@ std::string setAddonOptions()
 	docToValue(bootselButtonOptions.buttonMap, doc, "bootselButtonMap");
 	docToValue(bootselButtonOptions.enabled, doc, "BootselButtonAddonEnabled");
 
+#if 0
 	BuzzerOptions& buzzerOptions = Storage::getInstance().getAddonOptions().buzzerOptions;
 	docToPin(buzzerOptions.pin, doc, "buzzerPin");
 	docToValue(buzzerOptions.volume, doc, "buzzerVolume");
 	docToValue(buzzerOptions.enabled, doc, "BuzzerSpeakerAddonEnabled");
+#endif
 
     DualDirectionalOptions& dualDirectionalOptions = Storage::getInstance().getAddonOptions().dualDirectionalOptions;
 	docToPin(dualDirectionalOptions.downPin, doc, "dualDirDownPin");

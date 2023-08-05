@@ -10,7 +10,9 @@
 #include <stdint.h>
 #include "AnimationStation.hpp"
 #include "storagemanager.h"
+#if 0 // USB
 #include "PlayerLEDs.h"
+#endif
 #include "gpaddon.h"
 #include "helper.h"
 

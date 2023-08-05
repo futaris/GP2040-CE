@@ -20,11 +20,15 @@
 #include "addons/i2canalog1219.h"
 #include "addons/i2cdisplay.h"
 #include "addons/jslider.h"
+#if 0 // USB
 #include "addons/keyboard_host.h"
 #include "addons/neopicoleds.h"
+#endif 
 #include "addons/playernum.h"
+#if 0 // USB
 #include "addons/pleds.h"
 #include "addons/ps4mode.h"
+#endif
 #include "addons/reverse.h"
 #include "addons/slider_socd.h"
 #include "addons/turbo.h"
@@ -175,6 +179,7 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY(config.pinMappings, pinButtonFn, PIN_BUTTON_FN);
 
     // keyboardMapping
+#if 0
     INIT_UNSET_PROPERTY(config.keyboardMapping, keyDpadUp, KEY_DPAD_UP);
     INIT_UNSET_PROPERTY(config.keyboardMapping, keyDpadDown, KEY_DPAD_DOWN);
     INIT_UNSET_PROPERTY(config.keyboardMapping, keyDpadRight, KEY_DPAD_RIGHT);
@@ -193,6 +198,7 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY(config.keyboardMapping, keyButtonR3, KEY_BUTTON_R3);
     INIT_UNSET_PROPERTY(config.keyboardMapping, keyButtonA1, KEY_BUTTON_A1);
     INIT_UNSET_PROPERTY(config.keyboardMapping, keyButtonA2, KEY_BUTTON_A2);
+#endif
 
     // displayOptions
     INIT_UNSET_PROPERTY(config.displayOptions, enabled, !!HAS_I2C_DISPLAY);
@@ -267,6 +273,7 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY(config.profileOptions.alternativePinMappings[2], pinDpadRight, PIN_DPAD_RIGHT);
     config.profileOptions.alternativePinMappings_count = 3;
 
+#if 0 // USB
     // ledOptions
     INIT_UNSET_PROPERTY(config.ledOptions, dataPin, BOARD_LEDS_PIN);
     INIT_UNSET_PROPERTY(config.ledOptions, ledFormat, static_cast<LEDFormat_Proto>(LED_FORMAT));
@@ -346,6 +353,7 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY(config.animationOptions, customThemeR3Pressed, 0);
     INIT_UNSET_PROPERTY(config.animationOptions, customThemeA1Pressed, 0);
     INIT_UNSET_PROPERTY(config.animationOptions, customThemeA2Pressed, 0);
+#endif
 
     // addonOptions.bootselButtonOptions
     INIT_UNSET_PROPERTY(config.addonOptions.bootselButtonOptions, enabled, !!BOOTSEL_BUTTON_ENABLED);
@@ -457,6 +465,7 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY(config.addonOptions.playerNumberOptions, enabled, !!PLAYERNUM_ADDON_ENABLED);
     INIT_UNSET_PROPERTY(config.addonOptions.playerNumberOptions, number, PLAYER_NUMBER);
 
+#if 0 // USB
     // addonOptions.ps4Options
     INIT_UNSET_PROPERTY(config.addonOptions.ps4Options, enabled, PS4MODE_ADDON_ENABLED);
     INIT_UNSET_PROPERTY_BYTES(config.addonOptions.ps4Options, serial, emptyByteArray);
@@ -470,6 +479,7 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY_BYTES(config.addonOptions.ps4Options, rsaDQ, emptyByteArray);
     INIT_UNSET_PROPERTY_BYTES(config.addonOptions.ps4Options, rsaQP, emptyByteArray);
     INIT_UNSET_PROPERTY_BYTES(config.addonOptions.ps4Options, rsaRN, emptyByteArray);
+#endif
 
     // addonOptions.wiiOptions
     INIT_UNSET_PROPERTY(config.addonOptions.wiiOptions, enabled, WII_EXTENSION_ENABLED);
@@ -484,6 +494,7 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY(config.addonOptions.snesOptions, latchPin, SNES_PAD_LATCH_PIN);
     INIT_UNSET_PROPERTY(config.addonOptions.snesOptions, dataPin, SNES_PAD_DATA_PIN);
 
+#if 0 // USB
     // keyboardMapping
     INIT_UNSET_PROPERTY(config.addonOptions.keyboardHostOptions, enabled, KEYBOARD_HOST_ENABLED);
     INIT_UNSET_PROPERTY(config.addonOptions.keyboardHostOptions, pinDplus, KEYBOARD_HOST_PIN_DPLUS);
@@ -506,6 +517,7 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
     INIT_UNSET_PROPERTY(config.addonOptions.keyboardHostOptions.mapping, keyButtonR3, KEY_BUTTON_R3);
     INIT_UNSET_PROPERTY(config.addonOptions.keyboardHostOptions.mapping, keyButtonA1, KEY_BUTTON_A1);
     INIT_UNSET_PROPERTY(config.addonOptions.keyboardHostOptions.mapping, keyButtonA2, KEY_BUTTON_A2);
+#endif
 
     // addonOptions.focusModeOptions
     INIT_UNSET_PROPERTY(config.addonOptions.focusModeOptions, enabled, !!FOCUS_MODE_ENABLED);

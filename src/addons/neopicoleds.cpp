@@ -16,6 +16,8 @@
 #include "enums.h"
 #include "helper.h"
 
+// JUST DISABLE THIS FOR BLUETOOTH FOR NOW
+
 const std::string BUTTON_LABEL_UP = "Up";
 const std::string BUTTON_LABEL_DOWN = "Down";
 const std::string BUTTON_LABEL_LEFT = "Left";
