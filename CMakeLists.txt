@@ -19,11 +19,15 @@ project(GP2040-CE LANGUAGES C CXX ASM VERSION 0.7.3)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-if(DEFINED ENV{GP2040_BOARDCONFIG})
-  set(GP2040_BOARDCONFIG $ENV{GP2040_BOARDCONFIG})
-elseif(NOT DEFINED GP2040_BOARDCONFIG)
-  set(GP2040_BOARDCONFIG Pico)
-endif()
+#if(DEFINED ENV{GP2040_BOARDCONFIG})
+#  set(GP2040_BOARDCONFIG $ENV{GP2040_BOARDCONFIG})
+#elseif(NOT DEFINED GP2040_BOARDCONFIG)
+#  set(GP2040_BOARDCONFIG Pico)
+#endif()
+
+set(GP2040_BOARDCONFIG PicoW)
+# Not sure why I need this
+set(PICO_BOARD pico_w)
 
 if(DEFINED ENV{SKIP_SUBMODULES})
   set(SKIP_SUBMODULES $ENV{SKIP_SUBMODULES})
@@ -180,6 +184,10 @@ SNESpad
 pico_mbedtls
 TinyUSB_Gamepad
 nanopb
+pico_btstack_ble
+pico_btstack_classic
+pico_btstack_cyw43
+pico_cyw43_arch_none
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -190,6 +198,9 @@ headers/gamepad
 configs/${GP2040_BOARDCONFIG}
 ${PROTO_OUTPUT_DIR}
 )
+
+# pico_btstack_make_gatt_header(picow_ble_temp_sensor PRIVATE "${CMAKE_CURRENT_LIST_DIR}/temp_sensor.gatt")
+
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
   PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64
