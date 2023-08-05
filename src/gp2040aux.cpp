@@ -12,6 +12,8 @@
 #include "addons/buzzerspeaker.h"
 #include "addons/ps4mode.h"
 
+#include "pico/cyw43_arch.h"
+
 #include <iterator>
 
 GP2040Aux::GP2040Aux() : nextRuntime(0) {
@@ -21,6 +23,8 @@ GP2040Aux::~GP2040Aux() {
 }
 
 void GP2040Aux::setup() {
+	cyw43_arch_init();
+	cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
 	addons.LoadAddon(new I2CDisplayAddon(), CORE1_LOOP);
 	addons.LoadAddon(new NeoPicoLEDAddon(), CORE1_LOOP);
 	addons.LoadAddon(new PlayerLEDAddon(), CORE1_LOOP);

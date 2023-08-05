@@ -170,8 +170,52 @@ void GP2040::run() {
 		addons.ProcessAddons(ADDON_PROCESS::CORE0_USBREPORT);
 
 		tud_task(); // TinyUSB Task update
+		cdc_task();
 
 		nextRuntime = getMicro() + GAMEPAD_POLL_MICRO;
+	}
+}
+
+// echo to either Serial0 or Serial1
+// with Serial0 as all lower case, Serial1 as all upper case
+static void echo_serial_port(uint8_t itf, uint8_t buf[], uint32_t count)
+{
+  uint8_t const case_diff = 'a' - 'A';
+
+  for(uint32_t i=0; i<count; i++)
+  {
+    if (itf == 0)
+    {
+      // echo back 1st port as lower case
+      if (isupper(buf[i])) buf[i] += case_diff;
+    }
+    else
+    {
+      // echo back 2nd port as upper case
+      if (islower(buf[i])) buf[i] -= case_diff;
+    }
+
+    tud_cdc_n_write_char(itf, buf[i]);
+  }
+  tud_cdc_n_write_flush(itf);
+}
+
+void GP2040::cdc_task() {
+	uint8_t itf;
+
+	for (itf = 0; itf < CFG_TUD_CDC; itf++)
+	{
+		if ( tud_cdc_n_available(itf) )
+		{
+			uint8_t buf[64];
+
+			uint32_t count = tud_cdc_n_read(itf, buf, sizeof(buf));
+
+			// echo back to both serial ports
+			echo_serial_port(0, buf, count);
+			echo_serial_port(1, buf, count);
+		}
+
 	}
 }
 
@@ -201,6 +245,8 @@ GP2040::BootAction GP2040::getBootAction() {
 					return BootAction::SET_INPUT_MODE_HID;
 				} else if (!modeSwitchLocked && gamepad->pressedB4()) { // P2
 					return BootAction::SET_INPUT_MODE_PS4;
+				} else if (!modeSwitchLocked && gamepad->pressedL1()) { // P3
+					return BootAction::SET_INPUT_MODE_PS4; // SERIAL
 				} else if (!modeSwitchLocked && gamepad->pressedB1()) { // K1
 					return BootAction::SET_INPUT_MODE_SWITCH;
 				} else if (!modeSwitchLocked && gamepad->pressedB2()) { // K2
