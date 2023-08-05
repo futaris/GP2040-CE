@@ -7,11 +7,13 @@
 #include "enums.pb.h"
 #include "gamepad/GamepadDebouncer.h"
 #include "gamepad/GamepadState.h"
+#if 0 // USB
 #include "gamepad/descriptors/HIDDescriptors.h"
 #include "gamepad/descriptors/SwitchDescriptors.h"
 #include "gamepad/descriptors/XInputDescriptors.h"
 #include "gamepad/descriptors/KeyboardDescriptors.h"
 #include "gamepad/descriptors/PS4Descriptors.h"
+#endif
 
 #include "pico/stdlib.h"
 
@@ -85,6 +87,7 @@ public:
 	 */
 	bool hasRightAnalogStick {false};
 
+#if 0 // USB
 	void *getReport();
 	uint16_t getReportSize();
 	HIDReport *getHIDReport();
@@ -92,6 +95,7 @@ public:
 	XInputReport *getXInputReport();
 	KeyboardReport *getKeyboardReport();
 	PS4Report *getPS4Report();
+#endif
 
 	/**
 	 * @brief Check for a button press. Used by `pressed[Button]` helper methods.

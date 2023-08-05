@@ -15,7 +15,6 @@
 #include "addons/dualdirectional.h"
 #include "addons/tilt.h"
 #include "addons/extra_button.h"
-#include "addons/keyboard_host.h"
 #include "addons/i2canalog1219.h"
 #include "addons/jslider.h"
 #include "addons/playernum.h"
@@ -31,8 +30,10 @@
 #include "hardware/adc.h"
 
 // TinyUSB
+#if 0 // USB
 #include "usb_driver.h"
 #include "tusb.h"
+#endif
 
 #define GAMEPAD_DEBOUNCE_MILLIS 5 // make this a class object
 
@@ -57,7 +58,9 @@ void GP2040::setup() {
 		case BootAction::ENTER_WEBCONFIG_MODE:
 			{
 				Storage::getInstance().SetConfigMode(true);
+#if 0 // USB
 				initialize_driver(INPUT_MODE_CONFIG);
+#endif
 				ConfigManager::getInstance().setup(CONFIG_TYPE_WEB);
 				break;	
 			}
@@ -73,6 +76,7 @@ void GP2040::setup() {
 		case BootAction::SET_INPUT_MODE_XINPUT:
 		case BootAction::SET_INPUT_MODE_PS4:
 		case BootAction::SET_INPUT_MODE_KEYBOARD:
+		case BootAction::SET_INPUT_MODE_SERIAL:
 		case BootAction::NONE:
 			{
 				InputMode inputMode = gamepad->getOptions().inputMode;
@@ -86,6 +90,8 @@ void GP2040::setup() {
 					inputMode = INPUT_MODE_PS4;
 				} else if (bootAction == BootAction::SET_INPUT_MODE_KEYBOARD) {
 					inputMode = INPUT_MODE_KEYBOARD;
+				} else if (bootAction == BootAction::SET_INPUT_MODE_SERIAL) {
+					inputMode = INPUT_MODE_SERIAL;
 				}
 
 				if (inputMode != gamepad->getOptions().inputMode) {
@@ -94,7 +100,9 @@ void GP2040::setup() {
 					gamepad->save();
 				}
 
+#if 0 // USB
 				initialize_driver(inputMode);
+#endif
 				break;
 			}
 	}
@@ -103,7 +111,6 @@ void GP2040::setup() {
 	adc_init();
 
 	// Setup Add-ons
-  	addons.LoadAddon(new KeyboardHostAddon(), CORE0_INPUT);
 	addons.LoadAddon(new AnalogInput(), CORE0_INPUT);
 	addons.LoadAddon(new BootselButtonAddon(), CORE0_INPUT);
 	addons.LoadAddon(new DualDirectionalInput(), CORE0_INPUT);
@@ -115,7 +122,6 @@ void GP2040::setup() {
 	addons.LoadAddon(new TurboInput(), CORE0_INPUT);
 	addons.LoadAddon(new WiiExtensionInput(), CORE0_INPUT);
 	addons.LoadAddon(new SNESpadInput(), CORE0_INPUT);
-	addons.LoadAddon(new PlayerNumAddon(), CORE0_USBREPORT);
 	addons.LoadAddon(new SliderSOCDInput(), CORE0_INPUT);
 	addons.LoadAddon(new TiltInput(), CORE0_INPUT);
 }
@@ -161,18 +167,70 @@ void GP2040::run() {
 		// Copy Processed Gamepad for Core1 (race condition otherwise)
 		memcpy(&processedGamepad->state, &gamepad->state, sizeof(GamepadState));
 
+#if 0 // USB
 		// USB FEATURES : Send/Get USB Features (including Player LEDs on X-Input)
 		send_report(gamepad->getReport(), gamepad->getReportSize());
 		Storage::getInstance().ClearFeatureData();
 		receive_report(Storage::getInstance().GetFeatureData());
+#endif
 
+#if 0 // USB
 		// Process USB Reports
 		addons.ProcessAddons(ADDON_PROCESS::CORE0_USBREPORT);
 
 		tud_task(); // TinyUSB Task update
+		// cdc_task();
+#endif
 
 		nextRuntime = getMicro() + GAMEPAD_POLL_MICRO;
 	}
+}
+
+// echo to either Serial0 or Serial1
+// with Serial0 as all lower case, Serial1 as all upper case
+static void echo_serial_port(uint8_t itf, uint8_t buf[], uint32_t count)
+{
+#if 0
+  uint8_t const case_diff = 'a' - 'A';
+
+  for(uint32_t i=0; i<count; i++)
+  {
+    if (itf == 0)
+    {
+      // echo back 1st port as lower case
+      if (isupper(buf[i])) buf[i] += case_diff;
+    }
+    else
+    {
+      // echo back 2nd port as upper case
+      if (islower(buf[i])) buf[i] -= case_diff;
+    }
+
+    tud_cdc_n_write_char(itf, buf[i]);
+  }
+  tud_cdc_n_write_flush(itf);
+#endif
+}
+
+void GP2040::cdc_task() {
+#if 0
+	uint8_t itf;
+
+	for (itf = 0; itf < CFG_TUD_CDC; itf++)
+	{
+		if ( tud_cdc_n_available(itf) )
+		{
+			uint8_t buf[64];
+
+			uint32_t count = tud_cdc_n_read(itf, buf, sizeof(buf));
+
+			// echo back to both serial ports
+			echo_serial_port(0, buf, count);
+			echo_serial_port(1, buf, count);
+		}
+
+	},
+#endif
 }
 
 GP2040::BootAction GP2040::getBootAction() {
@@ -201,6 +259,8 @@ GP2040::BootAction GP2040::getBootAction() {
 					return BootAction::SET_INPUT_MODE_HID;
 				} else if (!modeSwitchLocked && gamepad->pressedB4()) { // P2
 					return BootAction::SET_INPUT_MODE_PS4;
+				} else if (!modeSwitchLocked && gamepad->pressedL1()) { // P3
+					return BootAction::SET_INPUT_MODE_PS4; // SERIAL
 				} else if (!modeSwitchLocked && gamepad->pressedB1()) { // K1
 					return BootAction::SET_INPUT_MODE_SWITCH;
 				} else if (!modeSwitchLocked && gamepad->pressedB2()) { // K2
