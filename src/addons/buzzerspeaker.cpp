@@ -1,9 +1,13 @@
+#if 0 // USB
 #include "hardware/pwm.h"
+#endif
 #include "addons/buzzerspeaker.h"
 #include "songs.h"
 #include "storagemanager.h"
 #include "math.h"
+#if 0 // USB
 #include "usb_driver.h"
+#endif
 #include "helper.h"
 #include "config.pb.h"
 
@@ -32,6 +36,7 @@ void BuzzerSpeakerAddon::process() {
 }
 
 void BuzzerSpeakerAddon::playIntro() {
+#if 0 // disabled for BLUETOOTH
 	if (getMillis() < 1000) {
 		return;
 	}
@@ -43,6 +48,7 @@ void BuzzerSpeakerAddon::playIntro() {
 	} else {
 		play(&introSong);
 	}
+#endif
 	introPlayed = true;
 }
 

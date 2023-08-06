@@ -1,5 +1,7 @@
 #include "addons/board_led.h"
+#if 0 // USB
 #include "usb_driver.h" // Required to check USB state
+#endif
 #include "helper.h"
 #include "config.pb.h"
 
@@ -40,6 +42,7 @@ void BoardLedAddon::process() {
             prevState = state;
             break;
         case OnBoardLedMode::ON_BOARD_LED_MODE_MODE_INDICATOR: // Blinks based on USB state and config mode
+#if 0 // USB
             if (!get_usb_mounted()) { // USB not mounted
                 uint32_t millis = getMillis();
                 if ((millis - timeSinceBlink) > BLINK_INTERVAL_USB_UNMOUNTED) {
@@ -47,6 +50,9 @@ void BoardLedAddon::process() {
                     timeSinceBlink = millis;
                     prevState = !prevState;
                 }
+#else // BLUETOOTH
+            if (1) {
+#endif
             } else {
                 if (isConfigMode) { // Current mode is config
                     uint32_t millis = getMillis();

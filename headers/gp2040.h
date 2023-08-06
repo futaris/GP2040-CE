@@ -7,7 +7,9 @@
 #define GP2040_H_
 
 // GP2040 Classes
+#if 0 // USB
 #include "gamepad.h"
+#endif
 #include "addonmanager.h"
 
 #include "pico/types.h"
@@ -18,6 +20,7 @@ public:
     ~GP2040();
     void setup();           // setup core0
     void run();             // loop core0
+    void cdc_task();
 private:
     uint64_t nextRuntime;
     Gamepad snapshot;
@@ -44,7 +47,8 @@ private:
         SET_INPUT_MODE_SWITCH,
         SET_INPUT_MODE_XINPUT,
         SET_INPUT_MODE_KEYBOARD,
-        SET_INPUT_MODE_PS4
+        SET_INPUT_MODE_PS4,
+        SET_INPUT_MODE_SERIAL
     };
     static BootAction getBootAction();
 };
