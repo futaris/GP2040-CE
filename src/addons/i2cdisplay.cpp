@@ -10,7 +10,9 @@
 #include "storagemanager.h"
 #include "pico/stdlib.h"
 #include "bitmaps.h"
+#if 0 // USB
 #include "ps4_driver.h"
+#endif
 #include "helper.h"
 #include "config.pb.h"
 
@@ -937,11 +939,15 @@ void I2CDisplayAddon::drawStatusBar(Gamepad * gamepad)
 		case INPUT_MODE_SWITCH: statusBar += "SWITCH"; break;
 		case INPUT_MODE_XINPUT: statusBar += "XINPUT"; break;
 		case INPUT_MODE_PS4:
+#if 0 // USB
 			if (PS4Data::getInstance().authsent == true ) {
 				statusBar += "PS4:AS";
 			} else {
 				statusBar += "PS4   ";
 			}
+#else // BLUETOOTH
+			statusBar += "PS4   ";
+#endif
 			break;
 		case INPUT_MODE_KEYBOARD: statusBar += "HID-KB"; break;
 		case INPUT_MODE_CONFIG: statusBar += "CONFIG"; break;

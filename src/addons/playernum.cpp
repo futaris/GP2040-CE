@@ -4,6 +4,8 @@
 #include "helper.h"
 #include "config.pb.h"
 
+// JUST DISABLE FOR BLUETOOTH FOR NOW
+
 bool PlayerNumAddon::available() {
     return Storage::getInstance().getAddonOptions().playerNumberOptions.enabled;
 }

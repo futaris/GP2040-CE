@@ -22,7 +22,7 @@ uint64_t getMicro() {
 	return to_us_since_boot(get_absolute_time());
 }
 
-
+#if 0
 static HIDReport hidReport
 {
 	.square_btn = 0, .cross_btn = 0, .circle_btn = 0, .triangle_btn = 0,
@@ -83,6 +83,8 @@ static KeyboardReport keyboardReport
 	.keycode = { 0 },
 	.multimedia = 0
 };
+
+#endif
 
 Gamepad::Gamepad(int debounceMS) :
 	debounceMS(debounceMS)
@@ -399,7 +401,7 @@ void Gamepad::processHotkeyIfNewAction(GamepadHotkey action)
 	lastAction = action;
 }
 
-
+#if 0
 void * Gamepad::getReport()
 {
 	switch (options.inputMode)
@@ -420,8 +422,9 @@ void * Gamepad::getReport()
 			return getHIDReport();
 	}
 }
+#endif
 
-
+#if 0
 uint16_t Gamepad::getReportSize()
 {
 	switch (options.inputMode)
@@ -442,8 +445,9 @@ uint16_t Gamepad::getReportSize()
 			return sizeof(HIDReport);
 	}
 }
+#endif
 
-
+#if 0
 HIDReport *Gamepad::getHIDReport()
 {
 	switch (state.dpad & GAMEPAD_MASK_DPAD)
@@ -481,8 +485,9 @@ HIDReport *Gamepad::getHIDReport()
 
 	return &hidReport;
 }
+#endif
 
-
+#if 0
 SwitchReport *Gamepad::getSwitchReport()
 {
 	switch (state.dpad & GAMEPAD_MASK_DPAD)
@@ -522,8 +527,9 @@ SwitchReport *Gamepad::getSwitchReport()
 
 	return &switchReport;
 }
+#endif
 
-
+#if 0
 XInputReport *Gamepad::getXInputReport()
 {
 	xinputReport.buttons1 = 0
@@ -565,8 +571,9 @@ XInputReport *Gamepad::getXInputReport()
 
 	return &xinputReport;
 }
+#endif
 
-
+#if 0
 PS4Report *Gamepad::getPS4Report()
 {
 	switch (state.dpad & GAMEPAD_MASK_DPAD)
@@ -623,7 +630,9 @@ PS4Report *Gamepad::getPS4Report()
 
 	return &ps4Report;
 }
+#endif
 
+#if 0
 uint8_t Gamepad::getModifier(uint8_t code) {
 	switch (code) {
 		case HID_KEY_CONTROL_LEFT : return KEYBOARD_MODIFIER_LEFTCTRL  ;
@@ -651,7 +660,9 @@ uint8_t Gamepad::getMultimedia(uint8_t code) {
 	}
 	return 0;
 }
+#endif
 
+#if 0
 void Gamepad::pressKey(uint8_t code) {
 	if (code > HID_KEY_GUI_RIGHT) {
 		keyboardReport.reportId = KEYBOARD_MULTIMEDIA_REPORT_ID;
@@ -661,14 +672,18 @@ void Gamepad::pressKey(uint8_t code) {
 		keyboardReport.keycode[code / 8] |= 1 << (code % 8);
 	}
 }
+#endif
 
+#if 0
 void Gamepad::releaseAllKeys(void) {
 	for (uint8_t i = 0; i < (sizeof(keyboardReport.keycode) / sizeof(keyboardReport.keycode[0])); i++) {
 		keyboardReport.keycode[i] = 0;
 	}
 	keyboardReport.multimedia = 0;
 }
+#endif
 
+#if 0
 KeyboardReport *Gamepad::getKeyboardReport()
 {
 	const KeyboardMapping& keyboardMapping = Storage::getInstance().getKeyboardMapping();
@@ -693,3 +708,4 @@ KeyboardReport *Gamepad::getKeyboardReport()
 	if(pressedA2()) 	{ pressKey(keyboardMapping.keyButtonA2); }
 	return &keyboardReport;
 }
+#endif
