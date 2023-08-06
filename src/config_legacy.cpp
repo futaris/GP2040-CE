@@ -35,6 +35,7 @@ namespace ConfigLegacy
         INPUT_MODE_HID,
         INPUT_MODE_KEYBOARD,
         INPUT_MODE_PS4,
+        INPUT_MODE_SERIAL,
         INPUT_MODE_CONFIG = 255,
     };
 

@@ -42,6 +42,9 @@ uint8_t const *tud_descriptor_device_cb(void)
 		case INPUT_MODE_PS4:
 			return ps4_device_descriptor;
 
+		case INPUT_MODE_SERIAL:
+			return serial_device_descriptor;
+
 		case INPUT_MODE_SWITCH:
 			return switch_device_descriptor;
 
@@ -67,6 +70,8 @@ uint8_t const *tud_hid_descriptor_report_cb(uint8_t itf)
 		case INPUT_MODE_PS4:
 			return ps4_report_descriptor;
 
+		case INPUT_MODE_SERIAL:
+			return NULL; //serial_report_descriptor;
 
 		case INPUT_MODE_KEYBOARD:
 			return keyboard_report_descriptor;
@@ -91,6 +96,9 @@ uint8_t const *tud_descriptor_configuration_cb(uint8_t index)
 
 		case INPUT_MODE_PS4:
 			return ps4_configuration_descriptor;
+
+		case INPUT_MODE_SERIAL:
+			return serial_configuration_descriptor;
 
 		case INPUT_MODE_SWITCH:
 			return switch_configuration_descriptor;
