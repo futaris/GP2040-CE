@@ -35,6 +35,7 @@ namespace ConfigLegacy
         INPUT_MODE_HID,
         INPUT_MODE_KEYBOARD,
         INPUT_MODE_PS4,
+        INPUT_MODE_SERIAL,
         INPUT_MODE_CONFIG = 255,
     };
 
@@ -1024,7 +1025,7 @@ bool ConfigUtils::fromLegacyStorage(Config& config)
         }
 
         OnBoardLedOptions& onBoardLedOptions = config.addonOptions.onBoardLedOptions;
-        config.addonOptions.has_onBoardLedOptions = true;
+        config.addonOptions.has_onBoardLedOptions = false;
         SET_PROPERTY(onBoardLedOptions, enabled, legacyAddonOptions.BoardLedAddonEnabled);
         if (isValidOnBoardLedMode(legacyAddonOptions.onBoardLedMode))
         {

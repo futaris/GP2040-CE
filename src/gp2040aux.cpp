@@ -6,14 +6,17 @@
 #include "addonmanager.h"
 
 #include "addons/i2cdisplay.h" // Add-Ons
+#if 0 // USB
 #include "addons/neopicoleds.h"
 #include "addons/pleds.h"
+#endif
 #include "addons/board_led.h"
 #include "addons/buzzerspeaker.h"
+#if 0 // USB
 #include "addons/ps4mode.h"
+#endif
 
 #include <iterator>
-
 GP2040Aux::GP2040Aux() : nextRuntime(0) {
 }
 
@@ -21,12 +24,20 @@ GP2040Aux::~GP2040Aux() {
 }
 
 void GP2040Aux::setup() {
+#if 0 // turn off I2C display (just in case) - GPIO on Pico W??
 	addons.LoadAddon(new I2CDisplayAddon(), CORE1_LOOP);
+#endif 
+#if 0 // USB
 	addons.LoadAddon(new NeoPicoLEDAddon(), CORE1_LOOP);
 	addons.LoadAddon(new PlayerLEDAddon(), CORE1_LOOP);
+#endif
+#if 0 // Pico W doesn't have an on board LED - GPIO25 OP wireless SPI CS
 	addons.LoadAddon(new BoardLedAddon(), CORE1_LOOP);
+#endif
+#if 0 // USB
 	addons.LoadAddon(new BuzzerSpeakerAddon(), CORE1_LOOP);
 	addons.LoadAddon(new PS4ModeAddon(), CORE1_LOOP);
+#endif
 }
 
 void GP2040Aux::run() {

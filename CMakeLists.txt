@@ -19,11 +19,15 @@ project(GP2040-CE LANGUAGES C CXX ASM VERSION 0.7.3)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-if(DEFINED ENV{GP2040_BOARDCONFIG})
-  set(GP2040_BOARDCONFIG $ENV{GP2040_BOARDCONFIG})
-elseif(NOT DEFINED GP2040_BOARDCONFIG)
-  set(GP2040_BOARDCONFIG Pico)
-endif()
+#if(DEFINED ENV{GP2040_BOARDCONFIG})
+#  set(GP2040_BOARDCONFIG $ENV{GP2040_BOARDCONFIG})
+#elseif(NOT DEFINED GP2040_BOARDCONFIG)
+#  set(GP2040_BOARDCONFIG Pico)
+#endif()
+
+set(GP2040_BOARDCONFIG PicoW)
+# Not sure why I need this
+set(PICO_BOARD pico_w)
 
 if(DEFINED ENV{SKIP_SUBMODULES})
   set(SKIP_SUBMODULES $ENV{SKIP_SUBMODULES})
@@ -118,6 +122,7 @@ add_compile_definitions(PICO_STACK_SIZE=0x1000)
 
 add_executable(${PROJECT_NAME}
 src/main.cpp
+src/btstack.cpp
 src/gp2040.cpp
 src/gp2040aux.cpp
 src/gamepad.cpp
@@ -127,29 +132,21 @@ src/storagemanager.cpp
 src/system.cpp
 src/config_legacy.cpp
 src/config_utils.cpp
-src/configs/webconfig.cpp
 src/addons/analog.cpp
 src/addons/board_led.cpp
 src/addons/bootsel_button.cpp
 src/addons/focus_mode.cpp
-src/addons/buzzerspeaker.cpp
 src/addons/dualdirectional.cpp
 src/addons/extra_button.cpp
-src/addons/keyboard_host.cpp
 src/addons/i2canalog1219.cpp
 src/addons/jslider.cpp
 src/addons/i2cdisplay.cpp
-src/addons/neopicoleds.cpp
-src/addons/playernum.cpp
-src/addons/playerleds.cpp
-src/addons/ps4mode.cpp
 src/addons/reverse.cpp
 src/addons/turbo.cpp
 src/addons/slider_socd.cpp
 src/addons/wiiext.cpp
 src/addons/snes_input.cpp
 src/gamepad/GamepadDebouncer.cpp
-src/gamepad/GamepadDescriptors.cpp
 src/addons/tilt.cpp
 ${PROTO_OUTPUT_DIR}/enums.pb.c
 ${PROTO_OUTPUT_DIR}/config.pb.c
@@ -163,24 +160,25 @@ pico_set_program_version(GP2040-CE "0.7.3")
 target_link_libraries(${PROJECT_NAME}
 pico_stdlib
 pico_bootsel_via_double_reset
-tinyusb_host
-tinyusb_pico_pio_usb
 AnimationStation
 CRC32
 FlashPROM
 ADS1219
-PlayerLEDs
 NeoPico
 OneBitDisplay
 ArduinoJson
-rndis
 hardware_adc
 WiiExtension
 SNESpad
 pico_mbedtls
-TinyUSB_Gamepad
 nanopb
+pico_btstack_ble
+pico_btstack_classic
+pico_btstack_cyw43
+pico_cyw43_arch_lwip_threadsafe_background
 )
+
+# pico_cyw43_arch_none - if no Wifi
 
 target_include_directories(${PROJECT_NAME} PUBLIC
 headers
@@ -190,6 +188,9 @@ headers/gamepad
 configs/${GP2040_BOARDCONFIG}
 ${PROTO_OUTPUT_DIR}
 )
+
+# pico_btstack_make_gatt_header(picow_ble_temp_sensor PRIVATE "${CMAKE_CURRENT_LIST_DIR}/temp_sensor.gatt")
+
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
   PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64
